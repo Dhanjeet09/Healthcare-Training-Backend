@@ -18,6 +18,9 @@ connectDB();
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.get('/', (req, res) => {
+  res.send('🎉 Healthcare Training API is running');
+});
 app.use('/api/hospitals', hospitalRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/students', studentRoutes);
