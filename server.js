@@ -10,6 +10,9 @@ import collegeRoutes from './routes/collegeRoutes.js';
 import programRoutes from './routes/programRoutes.js';
 import certificateRoutes from './routes/certificateRoutes.js';
 import validationRoutes from './routes/validationRoutes.js';
+import examRoutes from './routes/examRoutes.js';
+import internshipRoutes from './routes/internshipRoutes.js';
+import creditRoutes from './routes/creditRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -27,7 +30,10 @@ app.use('/api/students', studentRoutes);
 app.use('/api/colleges', collegeRoutes);
 app.use('/api/programs', programRoutes);
 app.use('/api/certificates', certificateRoutes);
-app.use('/api/validate', validationRoutes);
+app.use('/api/validations', validationRoutes);
+app.use('/api/exams', examRoutes);
+app.use('/api/internships', internshipRoutes);
+app.use('/api/credits', creditRoutes);
 
 app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });

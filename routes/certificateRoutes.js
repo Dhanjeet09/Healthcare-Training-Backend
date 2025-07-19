@@ -1,14 +1,8 @@
 import express from 'express';
-import {
-  issueCertificate,
-  validateCertificate,
-  getAllCertificates
-} from '../controllers/certificateController.js';
-
+import { issueCertificate, getCertificates } from '../controllers/certificateController.js';
 const router = express.Router();
 
-router.post('/issue/:studentId', issueCertificate);
-router.get('/validate/:uniqueId', validateCertificate);
-router.get('/', getAllCertificates);
+router.post('/', issueCertificate);
+router.get('/', getCertificates);
 
 export default router;

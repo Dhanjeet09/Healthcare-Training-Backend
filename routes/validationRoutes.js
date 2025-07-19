@@ -1,8 +1,8 @@
 import express from 'express';
-import { getValidationLogs } from '../controllers/validationController.js';
-
+import { validateCertificate, getValidationLogs } from '../controllers/validationController.js';
 const router = express.Router();
 
+router.post('/check', validateCertificate);
 router.get('/', getValidationLogs);
 
 export default router;

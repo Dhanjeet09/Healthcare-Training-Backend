@@ -1,31 +1,31 @@
 import Certificate from '../models/Certificate.js';
-import ValidationLog from '../models/ValidationLog.js';
-import Student from '../models/Student.js';
-import generateCertificateId from '../utils/generateCertificateId.js';
 
 export const issueCertificate = async (req, res) => {
-  const { studentId } = req.params;
-  const uniqueId = generateCertificateId();
+  const { student, program } = req.body;
 
-  const cert = await Certificate.create({ student: studentId, uniqueId });
-  await Student.findByIdAndUpdate(studentId, { certificate: cert._id });
+  try {
+    const existing = await Certificate.findOne({ student, program });
+    if (existing) return res.status(400).json({ message: 'Certificate already issued' });
 
-  res.status(201).json(cert);
+    const certificateNumber = `CERT-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    const certificate = await Certificate.create({
+      student,
+      program,
+      certificateNumber
+    });
+
+    res.status(201).json(certificate);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-export const validateCertificate = async (req, res) => {
-  const { uniqueId } = req.params;
-  const { validatedBy } = req.query;
-
-  const cert = await Certificate.findOne({ uniqueId }).populate('student');
-  if (!cert) return res.status(404).json({ message: 'Invalid certificate ID' });
-
-  await ValidationLog.create({ certificate: cert._id, validatedBy });
-
-  res.json({ valid: true, student: cert.student });
-};
-
-export const getAllCertificates = async (req, res) => {
-  const certs = await Certificate.find().populate('student');
-  res.json(certs);
+export const getCertificates = async (req, res) => {
+  try {
+    const certs = await Certificate.find().populate('student program');
+    res.json(certs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
